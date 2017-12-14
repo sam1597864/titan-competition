@@ -5,6 +5,8 @@
         Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
 <html>
+
+
     <head>
         <title>17 GoGo</title>
         <meta charset="utf-8" />
@@ -16,6 +18,175 @@
         <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
         <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+        <!-- 查詢食物熱量的方法 -->
+        <script>
+            function Select_Food() {
+                var htmlt = "<table bgcolor=\"white\"> ";
+                htmlt += "<tr><td bgcolor=\"white\"><font color=\"black\"face=\"monospace\">大類：</font> ";
+                htmlt += "<td bgcolor=\"white\"><select onchange=\"Select_FoodcalclassS()\" id=\"foodcalclassl\"></select></td></tr>";
+                htmlt += "<tr><td bgcolor=\"white\"><font color=\"black\"face=\"monospace\">小類：</font> ";
+                htmlt += "<td bgcolor=\"white\"><select onchange=\"Select_Foods()\" id=\"foodcalclasss\"></select></td></tr>";
+                htmlt += "<tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">食物名稱：</font></td>";
+                htmlt += "<td bgcolor=\"white\"><select onchange=\"CountFoodCal()\" id=\"food\"></select =\"food\"></td></tr>";
+                htmlt += "<tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">數量：</font></td>";
+                htmlt += "<td bgcolor=\"white\"><input onfocusout=\"CountFoodCal()\" type=\"number\" placeholder=\"0\" name=\"foodnum\" id=\"foodnum\" class=\"text ui-widget-content ui-corner-all\" /></td></tr>";
+                htmlt += "<tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">熱量：</font></td>";
+                htmlt += "<td id=\"foodresult\" bgcolor=\"white\"></td></tr></table> <div id=\"errorcall3\"></div>";
+                $("#dialogFoodHot").html(htmlt);
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/titan/Function.php",
+                    data: {"func": "Select_FoodcalclassL"},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+
+                        if (!result.includes("Error"))
+                        {
+                            var json = JSON.parse(result);
+                            var htmltext = "";
+                            for (var i = 0; i < json.length; i++) {
+                                htmltext += "<option value=\"" + json[i].ClassL_ID + "\">" + json[i].ClassL_Name + "</option> "
+                            }
+                            $("#foodcalclassl").html(htmltext);
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/titan/Function.php",
+                    data: {"func": "Select_FoodcalclassS", "ClassL_ID": "1"},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+
+                        if (!result.includes("Error"))
+                        {
+                            //   alert(result);
+                            var json = JSON.parse(result);
+                            var htmltext = "";
+                            for (var i = 0; i < json.length; i++) {
+                                htmltext += "<option value=\"" + json[i].ClassS_ID + "\">" + json[i].ClassS_Name + "</option> "
+                            }
+                            $("#foodcalclasss").html(htmltext);
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/titan/Function.php",
+                    data: {"func": "Select_Food", "ClassS_ID": "1"},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+
+                        if (!result.includes("Error"))
+                        {
+                            //   alert(result);
+                            var json = JSON.parse(result);
+                            var htmltext = "";
+                            for (var i = 0; i < json.length; i++) {
+                                htmltext += "<option value=\"" + json[i].Cal + "\">" + json[i].Food_Name + "  單位:" + json[i].Unit + "  重量:" + json[i].Weight + "</option> "
+                            }
+                            $("#food").html(htmltext);
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+                $("#dialogFoodHot").dialog({
+                    autoOpen: false,
+                    height: 450,
+                    width: 500,
+                    modal: true
+                });
+                $("#dialogFoodHot").dialog("open");
+            }
+            function Select_FoodcalclassS() {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/titan/Function.php",
+                    data: {"func": "Select_FoodcalclassS", "ClassL_ID": $("#foodcalclassl").val()},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+
+                        if (!result.includes("Error"))
+                        {
+                            //   alert(result);
+                            var json = JSON.parse(result);
+                            var htmltext = "";
+                            for (var i = 0; i < json.length; i++) {
+                                htmltext += "<option value=\"" + json[i].ClassS_ID + "\">" + json[i].ClassS_Name + "</option> "
+                            }
+                            $("#foodcalclasss").html(htmltext);
+                            Select_Foods();
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+
+            }
+            function Select_Foods() {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/titan/Function.php",
+                    data: {"func": "Select_Food", "ClassS_ID": $("#foodcalclasss").val()},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+
+                        if (!result.includes("Error"))
+                        {
+                            //   alert(result);
+                            var json = JSON.parse(result);
+                            var htmltext = "";
+                            for (var i = 0; i < json.length; i++) {
+                                htmltext += "<option value=\"" + json[i].Cal + "\">" + json[i].Food_Name + "  單位:" + json[i].Unit + "  重量:" + json[i].Weight + "</option> "
+                            }
+                            $("#food").html(htmltext);
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+            }
+            function CountFoodCal() {
+                var cal = document.getElementById("food").value;
+                var foodnum = document.getElementById("foodnum").value;
+                var errorcall = document.getElementById("errorcall3");
+                var foodresult = document.getElementById("foodresult");
+                var error = "";
+                if (foodnum == "") {
+                    error = "<font color=\"red\">數量不可為空白!!!</font>";
+                } else if (foodnum < 0 || foodnum == 0) {
+                    error = "<font color=\"red\">數量必須要大於0!!!</font>";
+                } else {
+                    error = "";
+                    var CountC = foodnum * cal;
+                    foodresult.innerHTML = "<font color=\"black\" face=\"monospace\">大約攝取 " + CountC + " 大卡</font>";
+                }
+
+                errorcall.innerHTML = error;
+                errorcall.style.display = "block";
+            }
+
+        </script>
+
+
+
+ 
 
     </head>
     <body id="top">
@@ -26,14 +197,14 @@
                 its extension (eg. images/banner). Your video must be available in both .mp4 and .webm
                 formats to work correctly.
         -->
-        <section id="banner" data-video="images/banner">
+        <section id="banner" data-video="images/banner" >
             <div class="inner">
                 <header>
                     <h1>17 GoGo</h1>
                     <p>有健康的身體才有精彩的人生</p>
-                    <button class="button fit" onclick="Login_User()">登入</button>
+                    <button class="button style1re fit"  onclick="Login_User()">登入</button></br>
                     <div id="dialogLogin" title="login" style="display:none;"></div>
-                    <a href="register.html" class="button style2 fit">註冊</a>
+                    <a href="register.html" class="button style2re fit">註冊</a>
                     <!--<button class="button style2 fit">註冊</button>
                     <div id="dialogRegister" title="register" style="display:none;"></div>	-->				
                 </header>
@@ -43,13 +214,15 @@
 
         <!-- Main -->
         <div id="main">
+            <div id="logout" style=" position: absolute;right: 80px; top: 20px;" >  </div>
+
             <div class="inner">
 
                 <!-- Boxes -->
                 <div class="thumbnails">
 
                     <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic01.png" alt="" /></a>
+                        <a  class="image fit"><img src="images/pic01.jpg" alt="" /></a>
                         <div class="inner">
                             <h3>查詢運動場所</h3>
                             <p>可以顯示室內或室外的運動場所</p>
@@ -59,7 +232,7 @@
                     </div>
 
                     <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic02.png" alt="" /></a>
+                        <a  class="image fit"><img src="images/pic02.jpg" alt="" /></a>
                         <div class="inner">
                             <h3>健康站位置</h3>
                             <p>可以得知量測健康的地點</p>
@@ -69,7 +242,7 @@
                     </div>
 
                     <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic03.png" alt="" /></a>
+                        <a  class="image fit"><img src="images/pic03.jpg" alt="" /></a>
                         <div class="inner">
                             <h3>查詢運動消耗熱量</h3>
                             <p>可以查詢各類運動所消耗的熱量</p>
@@ -79,7 +252,7 @@
                     </div>
 
                     <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic04.png" alt="" /></a>
+                        <a  class="image fit"><img src="images/pic04.jpg" alt="" /></a>
                         <div class="inner">
                             <h3>查詢食物熱量</h3>
                             <p>可以查詢各類食物的熱量 </p>
@@ -89,27 +262,18 @@
                     </div>
 
                     <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic05.png" alt="" /></a>
+                        <a  class="image fit"><img src="images/pic05.jpg" alt="" /></a>
                         <div class="inner">
                             <h3>查看天氣</h3>
                             <p>可以查詢天氣狀況</p>
-                            <button class="button style3 fit" onclick="Select_Weather()" >Search</button>
+                            <button class="button style3 fit" onclick="Select_Weather();" >Search</button>
                             <div id="dialogWeather" title="weather" style="display:none;"></div>									
                         </div>
                     </div>
 
-                    <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic06.png" alt="" /></a>
-                        <div class="inner">
-                            <h3>管理日誌</h3>
-                            <p>登入後可進行日誌的管理</p>
-                            <a href="" class="button fit">Search</a>
-                        </div>
-                    </div>
-
 
                     <div class="box">
-                        <a href="https://youtu.be/s6zR2T9vn2c" class="image fit"><img src="images/pic07.png" alt="" /></a>
+                        <a  class="image fit"><img src="images/pic07.jpg" alt="" /></a>
                         <div class="inner">
                             <h3>查詢成人熱量建議</h3>
                             <p>可以查詢成人熱量攝取建議</p>
@@ -118,13 +282,39 @@
                         </div>
                     </div>
 
+                    <div class="box">
+                        <a  class="image fit"><img src="images/pic06.jpg" alt="" /></a>
+                        <div class="inner">
+                            <h3>管理日誌</h3>
+                            <p>登入後可進行日誌的管理</p>
+                            <a onclick="Diary_Management()" class="button fit">Enter</a>
+                        </div>
+                    </div>                    
+                    <!--正在測試-->
 
+                    <div class="box">
+                        <a  class="image fit"><img src="images/pic08.jpg" alt="" /></a>
+                        <!--<div class="inner">
+                                <h3>xxx</h3>
+                                <p>xxxxxx</p>
+                                <a  class="button fit" data-poptrox="youtube,800x400">Search</a>
+                        </div>-->
+                    </div>
+
+
+                    <div class="box">
+                        <a  class="image fit"><img src="images/pic09.jpg" alt="" /></a>
+                        <!-- <div class="inner">
+                                <h3>xxx</h3>
+                                <p>xxxxx</p>
+                                <a  class="button fit" data-poptrox="youtube,800x400">Search</a>
+                        </div>-->
+                    </div>
 
                 </div>
+
+
             </div>
-
-
-
             <script src="assets/js/jquery.min.js"></script> 
             <script src="assets/js/jquery.scrolly.min.js"></script>
             <script src="assets/js/jquery.poptrox.min.js"></script>
