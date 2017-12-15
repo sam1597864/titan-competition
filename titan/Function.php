@@ -4,7 +4,19 @@ session_start();
 $func_name = $_POST["func"];
 $func_name();
 
-
+//運動種類
+function Select_Exercise() {
+    include 'Public_Function.php';
+    $sql = "SELECT * FROM sportcal ";
+    $result = doSQL($sql);
+    if ($result) {
+        //登入成功
+        echo json_encode($result);
+    } else {
+        //登入失敗
+        echo "Error";
+    }
+}
 
 //食物大類
 Function Select_FoodcalclassL() {

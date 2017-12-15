@@ -183,6 +183,62 @@
             }
 
         </script>
+        
+         <!-- 查詢運動消耗熱量的方法 -->
+        <script>
+            function Select_Exercise() {
+                $("#dialogExerciseHot").html("<table bgcolor=\"white\"><tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">體重(KG)：</font></td><td bgcolor=\"white\"><input type=\"number\" value='0' onfocusout=\"Count_Cal()\" type=\"text\" name=\"weight\" id=\"weight\" class=\"text ui-widget-content ui-corner-all\" /></td></tr><tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">運動類型：</font></td><td bgcolor=\"white\"><select onchange=\"Count_Cal()\" id=\"Exercise\"></select></td></tr><tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">消耗熱量：</font></td><td id=\"result\" bgcolor=\"white\"> </td></table> <div id=\"errorcall2\"></div>");
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/17gogo/Function.php",
+                    data: {"func": "Select_Exercise"},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+
+                        if (!result.includes("Error"))
+                        {
+                            var json = JSON.parse(result);
+                            var htmltext = "";
+                            for (var i = 0; i < json.length; i++) {
+                                htmltext += "<option value=\"" + json[i].Reduce_Cal + "\">" + json[i].Sport_Item + "</option> ";
+                            }
+                            $("#Exercise").html(htmltext);
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+                $("#dialogExerciseHot").dialog({
+                    autoOpen: false,
+                    height: 330,
+                    width: 470,
+                    modal: true,
+
+                });
+                $("#dialogExerciseHot").dialog("open");
+            }
+            function Count_Cal() {
+                var cal = document.getElementById("Exercise").value;
+                var weight = document.getElementById("weight").value;
+                var errorcall = document.getElementById("errorcall2");
+                var result = document.getElementById("result");
+                var error = "";
+                if (weight == "") {
+                    error = "<font color=\"red\">體重不可為空白!!!</font>";
+                } else if (weight < 0 || weight == 0) {
+                    error = "<font color=\"red\">體重必須要大於0!!!</font>";
+                } else {
+                    error = "";
+                    var CountC = weight * cal;
+                    result.innerHTML = "<font color=\"black\" face=\"monospace\">大約可消耗 " + CountC + " 大卡</font>";
+                }
+
+                errorcall.innerHTML = error;
+                errorcall.style.display = "block";
+            }
+        </script> 
 
 
 
