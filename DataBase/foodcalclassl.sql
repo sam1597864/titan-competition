@@ -1,0 +1,13 @@
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (1, '主食類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (2, '蔬菜類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (3, '魚肉類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (4, '蛋類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (5, '豆類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (6, '油類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (7, '酒類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (8, '零食類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (9, '速食類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (10, '飲料類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (11, '水果類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (12, '乳類');
+INSERT INTO `foodcalclassl` (`ClassL_ID`, `ClassL_Name`) VALUES (13, '調味料');
