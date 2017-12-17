@@ -64,6 +64,36 @@ Function Select_Food() {
     }
 }
 
+//重新定位健康站
+Function Select_HealthLocation_L() {
+    include 'Public_Function.php';
+    $sql = "SELECT healthspot.HealthSpot_ID,healthspot.Address,area.Area_Name,healthspotclass.Spot_Class_Name,healthspot.Spot_Name,healthspot.Lat,healthspot.Lng ";
+    $sql .= "FROM healthspot INNER JOIN area ON healthspot.Area_ID = area.Area_ID INNER JOIN healthspotclass ON healthspot.Spot_Class_ID = healthspotclass.Spot_Class_ID ";
+    $result = doSQL($sql);
+    if ($result) {
+        //成功
+        echo json_encode($result);
+    } else {
+        //失敗
+        echo "Error";
+    }
+}
+
+//健康站
+Function Select_HealthLocation() {
+    include 'Public_Function.php';
+    $sql = "SELECT healthspot.HealthSpot_ID,healthspot.Address,area.Area_Name,healthspotclass.Spot_Class_Name,healthspot.Spot_Name,healthspot.Lat,healthspot.Lng ";
+    $sql .= "FROM healthspot INNER JOIN area ON healthspot.Area_ID = area.Area_ID INNER JOIN healthspotclass ON healthspot.Spot_Class_ID = healthspotclass.Spot_Class_ID WHERE healthspot.Lat is not null";
+    $result = doSQL($sql);
+    if ($result) {
+        //成功
+        echo json_encode($result);
+    } else {
+        //失敗
+        echo "Error";
+    }
+}
+
 
 
 
