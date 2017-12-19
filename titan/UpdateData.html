@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <!-- jquery測試-->		
+        <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE56YtAdHbQg5_cUjhSyxwaKlPcuMgQ5M&signed_in=true&libraries=places&callback=initMap" async defer></script>
+        <script>
+            var myVar;
+            var index = 0;
+            var json;
+            var map;
+            var UpdateFunc = "";
+            function initMap() {
+                var pyrmont = {lat: 24.954103, lng: 121.224893};
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: pyrmont,
+                    zoom: 15
+                });
+            }
+            function Update(type) {
+                var finc = "";
+                if (type == 1) {
+                    finc = "Select_Location_L";
+                    UpdateFunc = "Update_Location";
+                } else {
+                    finc = "Select_HealthLocation_L";
+                    UpdateFunc = "Update_HealthLocation";
+                }
+                //找運動場所 
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/17gogo/Function.php",
+                    data: {"func": finc},
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + '' + result.statusText);
+                    }, success: function (result) {
+                        if (!result.includes("Error"))
+                        {
+                            
+                            json = JSON.parse(result);
+                            document.getElementById("B1").disabled = true;
+                            document.getElementById("B2").disabled = true;
+                            myVar = setInterval(myTimer, 1000);
+
+                        } else {
+                            alert("系統錯誤");
+                        }
+
+                    }
+                });
+            }
+            var htmltext = "";
+            function myTimer() {
+                var place = json[index];
+                index++;
+
+                var geocoder = new google.maps.Geocoder();
+                var address = "";
+                if (UpdateFunc == "Update_Location") {
+                    if (place.SportP_Class_Name != "公園") {
+                        address = place.Address + " 桃園";
+                    } else {
+                        address = place.SportP_Name + " 桃園";
+                    }
+                } else {
+                    address = place.Address + " 桃園";
+                }
+
+                geocoder.geocode({'address': address}, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var lat = results[0].geometry.location.lat();
+                        var lng = results[0].geometry.location.lng();
+                        var formatted_address = results[0].formatted_address;
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost/17gogo/Function.php",
+                            data: {"func": "Update_Location", "Lat": lat, "Lng": lng, "google_Address": formatted_address, "SportP_ID": place.SportP_ID},
+                            error: function (result) {
+                                alert('Service call failed: ' + result.status + '' + result.statusText);
+                            }, success: function (result) {
+                                if (!result.includes("Error"))
+                                {
+                                    if (UpdateFunc != "Update_Location") {
+                                        htmltext += index+address + " " + place.Spot_Name + "<font color=\"green\">找尋成功</font>  找尋結果 " + formatted_address + "<br />";
+                                    } else {
+                                        htmltext += index+address + " " + place.SportP_Name + "<font color=\"green\">找尋成功</font>  找尋結果 " + formatted_address + "<br />";
+                                    }
+                                    document.getElementById("reslut").innerHTML = htmltext;
+                                } else {
+                                    alert(result);
+                                }
+
+                            }
+                        });
+
+                        // alert(place.SportP_Name);
+                    } else {
+                        if (UpdateFunc != "Update_Location") {
+                            htmltext += index +address+ " " + place.Spot_Name + "<font color=\"red\">找尋失敗</font> <br />";
+                        } else {
+                            htmltext += index+address + " " + place.SportP_Name + "<font color=\"red\">找尋失敗</font> <br />";
+                        }              
+                        document.getElementById("reslut").innerHTML = htmltext;
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+                if (index == json.length) {
+                    clearInterval(myVar);
+                    document.getElementById("B1").disabled = false;
+                    document.getElementById("B2").disabled = false;
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+        <div> <button id="B1"  onclick="Update(1);">更新運動場所</button> <button id="B2" onclick="Update(2);">更新健康站</button> </div>
+        <div id="map" style="width: 200px;height: 200px;"></div>
+        <div id="reslut"></div>
+    </body>
+</html>

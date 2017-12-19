@@ -1,0 +1,13 @@
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (1, '八德');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (2, '大園');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (3, '大溪');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (4, '中壢');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (5, '平鎮');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (6, '桃園');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (7, '復興');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (8, '新屋');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (9, '楊梅');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (10, '龍潭');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (11, '龜山');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (12, '蘆竹');
+INSERT INTO `area` (`Area_ID`, `Area_Name`) VALUES (13, '觀音');

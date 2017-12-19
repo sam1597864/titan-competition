@@ -239,8 +239,8 @@
                 errorcall.style.display = "block";
             }
         </script> 
-		
-		<!-- 查詢健康站的方法 -->
+        
+         <!-- 查詢健康站的方法 -->
         <!--<iframe src="www.dr2ooo.com/tools/maps/maps.php?zoom=13&width=500&height=266&ll=40.705563,-74.013429&" width="500" height="266"></iframe>
 <script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyDE56YtAdHbQg5_cUjhSyxwaKlPcuMgQ5M"></script>
 
@@ -251,80 +251,7 @@
             }
         </script> 
 
-        <!-- 查詢天氣的方法 -->
-        <script>
-            function Select_Weather() {
 
-                $("#dialogWeather").html("<table bgcolor=\"white\">  <tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">選擇縣市：</font></td><td bgcolor=\"white\"><select onChange=\"GetAir();\" id=\"city\"><option selected value=\"taipei_city\">臺北市</option><option value=\"new_taipei_city\">新北市</option><option value=\"taichung_city\">臺中市</option><option value=\"tainan_city\">臺南市</option><option value=\"kaohsiung_city\">高雄市</option><option value=\"keelung_city\">基隆市</option><option value=\"taoyuan_country\">桃園市</option><option value=\"hsinchu_city\">新竹市</option><option value=\"hsinchu_country\">新竹縣</option><option value=\"miaoli_country\">苗栗縣</option><option value=\"changhua_country\">彰化縣</option><option value=\"nantou_country\">南投縣</option><option value=\"yunlin_country\">雲林縣</option><option value=\"chiayi_city\">嘉義市</option><option value=\"chiayi_country\">嘉義縣</option><option value=\"pingtung_country\">屏東縣</option><option value=\"yilan_country\">宜蘭縣</option><option value=\"hualien_country\">花蓮縣</option><option value=\"taitung_country\">臺東縣</option><option value=\"penghu_country\">澎湖縣</option><option value=\"kinmen_country\">金門縣</option><option value=\"lienchiang_country\">連江縣</option></select></td></tr><tr><td valign=\"middle\" colspan=\"2\"><textarea id=\"air\" cols=\"50\" rows=\"4\"></textarea></td></tr> <tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">查看天氣：</font></td><td bgcolor=\"white\" id=\"WeatherURL\"><font color=\"black\" face=\"monospace\">呈現URL</font></td></table>");
-                $("#dialogWeather").dialog({
-                    autoOpen: false,
-                    height: 400,
-                    width: 500,
-                    modal: true,
-
-                });
-                GetAir();
-                $("#dialogWeather").dialog("open");
-
-            }
-            function GetCityName()
-            {
-                var sel = document.getElementById("city");
-                return  sel.options[sel.selectedIndex].text;
-            }
-            function GetAir() {
-                var CityName = GetCityName();
-                var sel = document.getElementById("city");
-                //alert(CityName);
-                var airText = "";
-                $.getJSON("http://opendata2.epa.gov.tw/AQX.json", function (result) {
-                    for (var i = 0; i < result.length; i++) {
-                        if (result[i].County == CityName) {
-                            airText += "站名: " + result[i].SiteName + " 空氣污染指標: " + result[i].PSI + " 狀態: " + result[i].Status + " \n";
-                            airText += "PM10濃度: " + result[i].PM10 + "μg/m3 PM2.5濃度: " + result[i]["PM2.5"] + " μg/m3 \n";
-                        }
-                    }
-                    document.getElementById("air").innerHTML = airText;
-                    document.getElementById("WeatherURL").innerHTML = "<a Target=\"_new\" href=\"http://weather.json.tw/#" + sel.value + "\"> 查看" + CityName + "</a>";
-                }).error(function () {
-                    alert("Server Error");
-                });
-            }
-        </script>
-
-        <!-- 成人建議熱量的方法 -->
-        <script>
-            function Advise_Calories() {
-                $("#dialogAdultHot").html("<table bgcolor=\"white\">  <tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">活動強度：</font></td><td bgcolor=\"white\"><select onchange=\"CountAdviseCal()\" id=\"AdviseType\"><option value=\"40\">高強度</option><option value=\"35\">一般強度</option><option value=\"30\">低強度</option></select></td><tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">體重(KG)：</font></td><td bgcolor=\"white\"><input onfocusout=\"CountAdviseCal()\" type=\"number\" name=\"weight\" id=\"Adviseweight\" class=\"text ui-widget-content ui-corner-all\" /></td></tr><tr><td bgcolor=\"white\"><font color=\"black\" face=\"monospace\">建議熱量：</font></td><td id=\"adviseresult\" bgcolor=\"white\"></td></table>  <div id=\"errorcall4\"></div>");
-                $("#dialogAdultHot").dialog({
-                    autoOpen: false,
-                    height: 350,
-                    width: 450,
-                    modal: true,
-                });
-                $("#dialogAdultHot").dialog("open");
-            }
-
-            function CountAdviseCal() {
-                var cal = document.getElementById("AdviseType").value;
-                var Adviseweight = document.getElementById("Adviseweight").value;
-                var errorcall = document.getElementById("errorcall4");
-                var adviseresult = document.getElementById("adviseresult");
-                var error = "";
-                if (Adviseweight == "") {
-                    error = "<font color=\"red\">體重不可為空白!!!</font>";
-                } else if (Adviseweight < 0 || Adviseweight == 0) {
-                    error = "<font color=\"red\">體重必須要大於0!!!</font>";
-                } else {
-                    error = "";
-                    var CountC = Adviseweight * cal;
-                    adviseresult.innerHTML = "<font color=\"black\" face=\"monospace\">每日建議攝取熱量 " + CountC + " 大卡</font>";
-                }
-
-                errorcall.innerHTML = error;
-                errorcall.style.display = "block";
-            }
-        </script>  
 
  
 

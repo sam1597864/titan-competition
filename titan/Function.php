@@ -79,6 +79,21 @@ Function Select_HealthLocation_L() {
     }
 }
 
+//重新定位運動場所
+Function Select_Location_L() {
+    include 'Public_Function.php';
+    $sql = "SELECT sportplace.SportP_ID, sportplace.Lat,sportplace.Lng,sportplace.SportP_Name,sportplace.Address,sportplaceclass.SportP_Class_Name,sportplaceclass.SportP_Class_Type,area.Area_Name ";
+    $sql .= "FROM sportplace INNER JOIN sportplaceclass ON sportplace.SportP_Class_ID = sportplaceclass.SportP_Class_ID INNER JOIN area ON sportplace.Area_ID = area.Area_ID ";
+    $result = doSQL($sql);
+    if ($result) {
+        //成功
+        echo json_encode($result);
+    } else {
+        //失敗
+        echo "Error";
+    }
+}
+
 //健康站
 Function Select_HealthLocation() {
     include 'Public_Function.php';
@@ -94,7 +109,57 @@ Function Select_HealthLocation() {
     }
 }
 
+Function Select_Location() {
+    include 'Public_Function.php';
+    $sql = "SELECT sportplace.SportP_ID, sportplace.Lat,sportplace.Lng,sportplace.SportP_Name,sportplace.Address,sportplaceclass.SportP_Class_Name,sportplaceclass.SportP_Class_Type,area.Area_Name ";
+    $sql .= "FROM sportplace INNER JOIN sportplaceclass ON sportplace.SportP_Class_ID = sportplaceclass.SportP_Class_ID INNER JOIN area ON sportplace.Area_ID = area.Area_ID WHERE sportplace.Lat is not null";
+    $result = doSQL($sql);
+    if ($result) {
+        //成功
+        echo json_encode($result);
+    } else {
+        //失敗
+        echo "Error";
+    }
+}
 
+//運動場所
+Function Update_Location() {
+    include 'Public_Function.php';
+    $arr = array("'", "--", "*/", "/*");
+    $Lat = str_replace($arr, "", $_POST["Lat"]);
+    $Lng = str_replace($arr, "", $_POST["Lng"]);
+    $google_Address = str_replace($arr, "", $_POST["google_Address"]);
+    $SportP_ID = str_replace($arr, "", $_POST["SportP_ID"]);
+    $sql = "UPDATE sportplace SET Lat='$Lat' ,Lng='$Lng',google_Address='$google_Address' WHERE SportP_ID='$SportP_ID'";
+    $result = doSQL($sql);
+    if ($result) {
+        //成功
+        echo "Error";
+    } else {
+        //失敗
+        echo "OK";
+    }
+}
+
+//運動場所
+Function Update_HealthLocation() {
+    include 'Public_Function.php';
+    $arr = array("'", "--", "*/", "/*");
+    $Lat = str_replace($arr, "", $_POST["Lat"]);
+    $Lng = str_replace($arr, "", $_POST["Lng"]);
+    $google_Address = str_replace($arr, "", $_POST["google_Address"]);
+    $HealthSpot_ID = str_replace($arr, "", $_POST["HealthSpot_ID"]);
+    $sql = "UPDATE HealthSpot SET Lat='$Lat' ,Lng='$Lng',google_Address='$google_Address' WHERE HealthSpot_ID='$HealthSpot_ID'";
+    $result = doSQL($sql);
+    if ($result) {
+        //失敗
+        echo "Error";
+    } else {
+        //成功
+        echo "OK";
+    }
+}
 
 
 ?>
